@@ -86,7 +86,7 @@ st.markdown(
     """
     <div class="app-header">
         <h1>🛡️ Riesgo Actuarial — K-means & SVM</h1>
-        <p>IS-701 · Inteligencia Artificial · Campus Comayagua · Segmentación no supervisada y clasificación de riesgo</p>
+        <p>IS-701 · Inteligencia Artificial · Campus Comayagua · Jorge Abraham Fajardo López · 20231900189</p>
     </div>
     """,
     unsafe_allow_html=True,
@@ -354,4 +354,4 @@ with tab_datos:
         )
 
 st.markdown("---")
-st.caption("Proyecto académico · IS-701 Inteligencia Artificial · Campus Comayagua · UNAH")
+st.caption(" IS-701 Inteligencia Artificial · UNAH · Campus Comayagua")
