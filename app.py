@@ -16,12 +16,32 @@ st.set_page_config(
 
 @st.cache_resource
 def cargar_modelo():
-    """Carga y almacena en caché el pipeline entrenado para evitar recargarlo en cada click."""
+    """Carga el pipeline entrenado y extrae el estimador correcto si viene en un dict/GridSearchCV."""
     ruta_svm = 'models/svm_riesgo_actuarial.pkl'
     if not os.path.exists(ruta_svm):
         st.error(f"❌ No se encontró el archivo del modelo en '{ruta_svm}'. Asegúrate de haber ejecutado tu script de entrenamiento primero.")
         return None
-    return joblib.load(ruta_svm)
+    
+    objeto_cargado = joblib.load(ruta_svm)
+    
+    # --- AQUÍ ESTÁ EL TRUCO PARA EVITAR EL ATTRIBUTEERROR ---
+    # Si por error se guardó el objeto GridSearchCV o un diccionario de metadatos/parámetros
+    if isinstance(objeto_cargado, dict):
+        # Intentamos extraer el mejor estimador si se guardó la estructura de grid_search
+        if 'best_estimator_' in objeto_cargado:
+            return objeto_cargado['best_estimator_']
+        elif 'classifier' in objeto_cargado: 
+            # Si guardaste un dict personalizado, busca si la clave contiene el pipeline
+            return objeto_cargado['classifier']
+        else:
+            st.error("❌ El archivo .pkl contiene un diccionario, pero no se encontró un modelo/pipeline válido dentro de él.")
+            return None
+            
+    # Si el objeto tiene el atributo 'best_estimator_' (es un GridSearchCV directo)
+    if hasattr(objeto_cargado, 'best_estimator_'):
+        return objeto_cargado.best_estimator_
+        
+    return objeto_cargado
 
 # Título y descripción en la interfaz web
 st.title("📊 Sistema Actuarial de Evaluación de Riesgo")
