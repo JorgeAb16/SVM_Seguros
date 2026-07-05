@@ -28,12 +28,11 @@ CSV_CLUSTERS_PATH = OUTPUT_DIR / "insurance_con_clusters.csv"
 SVM_RESULTS_PATH = OUTPUT_DIR / "svm_resultados_kernels.csv"
 
 # ----------------------------------------------------------------------------
-# Estilos personalizados - Interfaz profesional mejorada
+# Estilos personalizados
 # ----------------------------------------------------------------------------
 st.markdown(
     """
     <style>
-    /* Importación de fuente moderna */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
     * {
@@ -41,18 +40,18 @@ st.markdown(
     }
     
     .main {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
         background-attachment: fixed;
     }
     
-    /* Header principal con efecto glassmorphism */
+    /* Header principal */
     .app-header {
         padding: 2rem 2.5rem;
         border-radius: 20px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #3a7bd5 100%);
         color: white;
         margin-bottom: 2rem;
-        box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+        box-shadow: 0 15px 40px rgba(30, 60, 114, 0.3);
         position: relative;
         overflow: hidden;
     }
@@ -60,196 +59,152 @@ st.markdown(
     .app-header::before {
         content: '';
         position: absolute;
-        top: -50%;
-        right: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
-        animation: pulse 4s ease-in-out infinite;
-    }
-    
-    @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.1); }
+        top: -30%;
+        right: -20%;
+        width: 150%;
+        height: 150%;
+        background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
     }
     
     .app-header h1 {
         margin-bottom: 0.3rem;
-        font-size: 2.2rem;
+        font-size: 2rem;
         font-weight: 700;
         position: relative;
         z-index: 1;
-        letter-spacing: -0.5px;
     }
     
     .app-header p {
         margin: 0;
-        opacity: 0.95;
+        opacity: 0.9;
         font-size: 1rem;
         font-weight: 300;
         position: relative;
         z-index: 1;
     }
     
-    /* Tarjetas de riesgo con efectos mejorados */
+    /* Tarjetas de riesgo */
     .risk-card {
         padding: 2rem;
         border-radius: 20px;
         text-align: center;
         color: white;
         font-weight: 600;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     
     .risk-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 45px rgba(0,0,0,0.3);
-    }
-    
-    .risk-card::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
-        pointer-events: none;
+        transform: translateY(-3px);
+        box-shadow: 0 18px 40px rgba(0,0,0,0.3);
     }
     
     .risk-bajo { 
-        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        background: linear-gradient(135deg, #0b8a5e 0%, #15b87e 100%);
     }
     
     .risk-medio { 
-        background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
+        background: linear-gradient(135deg, #d4840a 0%, #f0a500 100%);
     }
     
     .risk-alto { 
-        background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+        background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
     }
     
-    /* Cajas métricas con diseño moderno */
-    .metric-box {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-radius: 16px;
-        padding: 1.5rem;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        transition: all 0.3s ease;
-    }
-    
-    .metric-box:hover {
-        box-shadow: 0 12px 40px rgba(0,0,0,0.12);
-        transform: translateY(-2px);
-    }
-    
-    /* Sidebar mejorada */
+    /* Sidebar */
     section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        background: linear-gradient(180deg, #1a2332 0%, #1e2d42 50%, #243447 100%);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
     }
     
     section[data-testid="stSidebar"] * {
-        color: #e0e6ed !important;
+        color: #e8ecf1 !important;
     }
     
     section[data-testid="stSidebar"] .stButton > button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        background: linear-gradient(135deg, #2a5298 0%, #3a7bd5 100%) !important;
         color: white !important;
         border: none !important;
-        border-radius: 12px !important;
-        padding: 0.75rem 1.5rem !important;
+        border-radius: 10px !important;
+        padding: 0.7rem 1.5rem !important;
         font-weight: 600 !important;
-        letter-spacing: 0.5px !important;
         transition: all 0.3s ease !important;
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
+        box-shadow: 0 6px 20px rgba(42, 82, 152, 0.4) !important;
     }
     
     section[data-testid="stSidebar"] .stButton > button:hover {
         transform: translateY(-2px) !important;
-        box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6) !important;
+        box-shadow: 0 10px 28px rgba(42, 82, 152, 0.6) !important;
     }
     
-    /* Tabs personalizados */
+    /* Estilos para pestañas */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background-color: transparent;
+        gap: 4px;
+        background-color: #f0f2f6;
+        padding: 6px;
+        border-radius: 12px;
     }
     
     .stTabs [data-baseweb="tab"] {
-        background-color: white;
-        border-radius: 12px 12px 0 0;
-        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        padding: 10px 20px;
         font-weight: 500;
-        transition: all 0.3s ease;
-        border: 1px solid #e1e4e8;
-        border-bottom: none;
+        color: #2c3e50;
+        background-color: transparent;
+        border: none;
+        transition: all 0.2s ease;
     }
     
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
         color: white !important;
-        border-color: transparent;
-    }
-    
-    /* DataFrames y tablas */
-    .stDataFrame {
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-    }
-    
-    /* Métricas con estilo */
-    [data-testid="stMetricValue"] {
-        font-weight: 700;
-        font-size: 2rem;
-    }
-    
-    /* Expanders */
-    .streamlit-expanderHeader {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        border-radius: 12px;
         font-weight: 600;
+    }
+    
+    .stTabs [data-baseweb="tab"]:hover {
+        background-color: rgba(30, 60, 114, 0.08);
+    }
+    
+    .stTabs [aria-selected="true"]:hover {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    }
+    
+    /* Contenedor de métricas */
+    div[data-testid="stMetric"] {
+        background: white;
+        padding: 1rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    
+    /* DataFrames */
+    .stDataFrame {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
     }
     
     /* Footer */
     .footer {
         text-align: center;
-        padding: 2rem;
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-        border-radius: 16px;
+        padding: 1.5rem;
+        background: linear-gradient(135deg, #1a2332 0%, #1e2d42 100%);
+        border-radius: 12px;
         margin-top: 2rem;
         color: #a0aec0;
-    }
-    
-    /* Mejoras en gráficos */
-    .js-plotly-plot, .plot-container {
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-    }
-    
-    /* Animación de carga */
-    .stSpinner > div {
-        border-top-color: #667eea !important;
+        font-size: 0.9rem;
     }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# Header mejorado con ícono animado
+# Header
 st.markdown(
     """
     <div class="app-header">
         <h1>🛡️ Plataforma de Riesgo Actuarial</h1>
-        <p>Análisis inteligente con K-means & SVM · IS-701 Inteligencia Artificial</p>
-        <p style="font-size: 0.9rem; margin-top: 0.5rem;">📍 Campus Comayagua · 👨‍💻 Jorge Abraham Fajardo López · 🆔 20231900189</p>
+        <p>Análisis con K-means & SVM · IS-701 Inteligencia Artificial · UNAH Campus Comayagua</p>
     </div>
     """,
     unsafe_allow_html=True,
@@ -306,14 +261,13 @@ else:
     mapa_riesgo = {0: "Bajo", 1: "Medio", 2: "Alto"}
 
 EXPLICACIONES = {
-    "Bajo": "✅ Cliente agrupado con perfiles de menor costo médico promedio y factores de riesgo controlados.",
-    "Medio": "⚠️ Cliente agrupado con perfiles de costo y factores de riesgo intermedios. Se recomienda seguimiento.",
-    "Alto": "🚨 Cliente agrupado con perfiles de mayor costo médico promedio y/o factores de riesgo significativos. Requiere atención prioritaria.",
+    "Bajo": "Perfil con menor costo médico promedio y factores de riesgo controlados.",
+    "Medio": "Perfil con costo y factores de riesgo intermedios. Se recomienda seguimiento.",
+    "Alto": "Perfil con mayor costo médico promedio y factores de riesgo significativos. Requiere atención prioritaria.",
 }
 
 RISK_CSS_CLASS = {"Bajo": "risk-bajo", "Medio": "risk-medio", "Alto": "risk-alto"}
 RISK_EMOJI = {"Bajo": "🟢", "Medio": "🟡", "Alto": "🔴"}
-RISK_ICON = {"Bajo": "✅", "Medio": "⚠️", "Alto": "🚨"}
 
 # ----------------------------------------------------------------------------
 # Aviso si faltan archivos
@@ -330,81 +284,52 @@ if archivos_faltantes:
     )
 
 # ----------------------------------------------------------------------------
-# Sidebar - formulario de cliente nuevo con diseño mejorado
+# Sidebar
 # ----------------------------------------------------------------------------
 with st.sidebar:
-    st.markdown("## 📋 Evaluación de Cliente")
-    st.markdown("---")
-    st.caption("Complete la información para estimar el nivel de riesgo actuarial.")
+    st.markdown("## 📋 Datos del Cliente")
+    st.caption("Complete la información para estimar el nivel de riesgo.")
     
-    with st.container():
-        st.markdown("### 👤 Datos Personales")
-        age = st.slider("🎂 Edad", min_value=18, max_value=100, value=45, help="Edad del asegurado")
-        sex = st.selectbox("⚧ Sexo", ["male", "female"], 
-                          format_func=lambda x: "👨 Masculino" if x == "male" else "👩 Femenino")
-        
-    with st.container():
-        st.markdown("### 🏥 Indicadores de Salud")
-        bmi = st.slider("⚖️ BMI (Índice de Masa Corporal)", min_value=10.0, max_value=60.0, 
-                       value=31.2, step=0.1, help="Body Mass Index")
-        smoker = st.selectbox("🚬 ¿Fumador?", ["yes", "no"], 
-                             format_func=lambda x: "🚬 Sí" if x == "yes" else "🚭 No")
-    
-    with st.container():
-        st.markdown("### 👨‍👩‍👧‍👦 Información Familiar")
-        children = st.slider("👶 Número de hijos", min_value=0, max_value=10, value=2)
-    
-    with st.container():
-        st.markdown("### 🌍 Ubicación y Costos")
-        region = st.selectbox("🗺️ Región", ["southeast", "southwest", "northeast", "northwest"],
-                            format_func=lambda x: {
-                                "southeast": "🌅 Sureste",
-                                "southwest": "🌄 Suroeste",
-                                "northeast": "🌆 Noreste",
-                                "northwest": "🏔️ Noroeste"
-                            }[x])
-        charges = st.number_input("💵 Cargos médicos estimados ($)", min_value=0.0, 
-                                 value=28000.0, step=500.0, format="%.2f")
+    age = st.slider("🎂 Edad", min_value=18, max_value=100, value=45)
+    sex = st.selectbox("⚧ Sexo", ["male", "female"], 
+                      format_func=lambda x: "Masculino" if x == "male" else "Femenino")
+    bmi = st.slider("⚖️ BMI", min_value=10.0, max_value=60.0, value=31.2, step=0.1)
+    children = st.slider("👶 Hijos", min_value=0, max_value=10, value=2)
+    smoker = st.selectbox("🚬 Fumador", ["yes", "no"], 
+                         format_func=lambda x: "Sí" if x == "yes" else "No")
+    region = st.selectbox("🗺️ Región", ["southeast", "southwest", "northeast", "northwest"],
+                        format_func=lambda x: {
+                            "southeast": "Sureste", "southwest": "Suroeste",
+                            "northeast": "Noreste", "northwest": "Noroeste"
+                        }[x])
+    charges = st.number_input("💵 Cargos médicos ($)", min_value=0.0, value=28000.0, step=500.0)
     
     st.markdown("---")
-    evaluar = st.button("🔍 Analizar Riesgo", use_container_width=True, type="primary")
-    st.markdown("---")
-    st.caption("💡 Los resultados se basan en patrones identificados por el modelo K-means.")
+    evaluar = st.button("🔍 Evaluar Riesgo", use_container_width=True, type="primary")
 
 # ----------------------------------------------------------------------------
-# Tabs principales con iconos mejorados
+# Tabs principales
 # ----------------------------------------------------------------------------
 tab_eval, tab_clusters, tab_svm, tab_datos = st.tabs(
-    ["🧮 Evaluación Individual", "📊 Segmentación K-means", "🧩 Rendimiento SVM", "📁 Datos Maestros"]
+    ["🧮 Evaluar Cliente", "📊 Segmentación K-means", "🧩 Comparación SVM", "📁 Datos"]
 )
 
 # --- Tab 1: Evaluación de cliente -------------------------------------------
 with tab_eval:
-    st.markdown("### 📋 Análisis de Riesgo Individual")
-    
     if modelo_completo is None:
-        st.error(
-            "❌ No se pudo cargar `models/kmeans_riesgo_actuarial.pkl`. "
-            "Verifique que el archivo exista en la ruta correcta."
-        )
+        st.error("❌ No se pudo cargar el modelo K-means. Verifique que el archivo exista.")
     else:
         if evaluar:
             cliente = pd.DataFrame([{
-                "age": age,
-                "sex": str(sex).lower(),
-                "bmi": bmi,
-                "children": children,
-                "smoker": str(smoker).lower(),
-                "region": str(region).lower(),
-                "charges": charges,
+                "age": age, "sex": str(sex).lower(), "bmi": bmi,
+                "children": children, "smoker": str(smoker).lower(),
+                "region": str(region).lower(), "charges": charges,
             }])
 
             cluster = int(modelo_completo.predict(cliente)[0])
             riesgo = mapa_riesgo.get(cluster, "Desconocido")
-            explicacion = EXPLICACIONES.get(riesgo, "Sin información adicional para este cluster.")
-            icono_riesgo = RISK_ICON.get(riesgo, "⚪")
+            explicacion = EXPLICACIONES.get(riesgo, "")
 
-            # Resultado principal con animación
             col1, col2 = st.columns([1, 2])
             with col1:
                 css_class = RISK_CSS_CLASS.get(riesgo, "risk-medio")
@@ -412,73 +337,32 @@ with tab_eval:
                 st.markdown(
                     f"""
                     <div class="risk-card {css_class}">
-                        <div style="font-size:3rem; margin-bottom: 0.5rem;">{emoji}</div>
-                        <div style="font-size:1.8rem; font-weight: 700; margin-top:0.3rem;">{icono_riesgo} Riesgo {riesgo}</div>
-                        <div style="font-size:1rem; opacity:0.95; margin-top:0.5rem;">Grupo #{cluster}</div>
-                        <div style="font-size:0.85rem; opacity:0.9; margin-top:0.8rem; line-height: 1.4;">
-                            {explicacion[:100]}...
-                        </div>
+                        <div style="font-size:3rem;">{emoji}</div>
+                        <div style="font-size:1.5rem; margin-top:0.5rem; font-weight:700;">Riesgo {riesgo}</div>
+                        <div style="font-size:0.95rem; opacity:0.9; margin-top:0.5rem;">Grupo #{cluster}</div>
                     </div>
                     """,
                     unsafe_allow_html=True,
                 )
-            
             with col2:
-                st.markdown("#### 🔍 Análisis Detallado")
+                st.markdown("### 📋 Resultado del Análisis")
                 st.info(explicacion)
                 
-                st.markdown("#### 📊 Perfil del Cliente Evaluado")
+                st.markdown("**Datos del cliente evaluado:**")
                 st.dataframe(cliente, use_container_width=True, hide_index=True)
                 
-                # Métricas adicionales en cards
-                met_col1, met_col2, met_col3 = st.columns(3)
-                with met_col1:
-                    st.metric("🎂 Edad", f"{age} años")
-                with met_col2:
-                    st.metric("⚖️ BMI", f"{bmi:.1f}")
-                with met_col3:
-                    st.metric("💵 Cargos", f"${charges:,.2f}")
+                col_a, col_b, col_c = st.columns(3)
+                col_a.metric("Edad", f"{age} años")
+                col_b.metric("BMI", f"{bmi:.1f}")
+                col_c.metric("Cargos", f"${charges:,.2f}")
         else:
-            st.info("👈 Complete el formulario en la barra lateral y presione **Analizar Riesgo** para ver los resultados.")
-
-    if metadata is not None:
-        with st.expander("🔬 Metadatos y Configuración del Modelo"):
-            c1, c2, c3, c4 = st.columns(4)
-            c1.metric("🎯 Clusters (K)", metadata.get("n_clusters", "—"))
-            c2.metric("📈 Silhouette Score", f"{metadata.get('silhouette_score', 0):.3f}")
-            c3.metric("🧩 Kernels SVM", len(metadata.get("svm_kernels", [])))
-            c4.metric("📊 Features", len(metadata.get("features", [])))
-            
-            st.markdown("#### 📋 Configuración Completa")
-            st.json(metadata)
+            st.info("👈 Complete el formulario y presione **Evaluar Riesgo** para ver los resultados.")
 
 # --- Tab 2: Segmentación K-means ---------------------------------------------
 with tab_clusters:
-    st.markdown("### 📊 Perfil de Segmentación por Clusters")
-    
     if df_clusters is None:
-        st.warning(
-            "📁 No se encontró `outputs/insurance_con_clusters.csv`. "
-            "Copie ese archivo generado por el notebook para visualizar esta sección."
-        )
+        st.warning("📁 No se encontró el archivo de clusters. Verifique la carpeta `outputs/`.")
     else:
-        # KPIs principales
-        total_clientes = len(df_clusters)
-        riesgo_counts = df_clusters["riesgo_actuarial"].value_counts()
-        
-        kpi1, kpi2, kpi3, kpi4 = st.columns(4)
-        with kpi1:
-            st.metric("👥 Total Clientes", f"{total_clientes:,}")
-        with kpi2:
-            st.metric("🟢 Bajo Riesgo", f"{riesgo_counts.get('Bajo', 0):,}")
-        with kpi3:
-            st.metric("🟡 Riesgo Medio", f"{riesgo_counts.get('Medio', 0):,}")
-        with kpi4:
-            st.metric("🔴 Alto Riesgo", f"{riesgo_counts.get('Alto', 0):,}")
-        
-        st.markdown("---")
-        st.markdown("#### 🎯 Resumen por Nivel de Riesgo")
-        
         resumen = df_clusters.groupby("riesgo_actuarial").agg(
             cantidad_clientes=("riesgo_actuarial", "count"),
             edad_promedio=("age", "mean"),
@@ -490,6 +374,16 @@ with tab_clusters:
         orden = [r for r in ["Bajo", "Medio", "Alto"] if r in resumen.index]
         resumen = resumen.reindex(orden)
 
+        # KPIs
+        total = len(df_clusters)
+        k1, k2, k3, k4 = st.columns(4)
+        k1.metric("👥 Total Clientes", f"{total:,}")
+        k2.metric("🟢 Bajo Riesgo", resumen.loc["Bajo", "cantidad_clientes"] if "Bajo" in resumen.index else 0)
+        k3.metric("🟡 Medio Riesgo", resumen.loc["Medio", "cantidad_clientes"] if "Medio" in resumen.index else 0)
+        k4.metric("🔴 Alto Riesgo", resumen.loc["Alto", "cantidad_clientes"] if "Alto" in resumen.index else 0)
+        
+        st.markdown("---")
+        
         cols = st.columns(len(resumen))
         for col, (riesgo, fila) in zip(cols, resumen.iterrows()):
             css_class = RISK_CSS_CLASS.get(riesgo, "risk-medio")
@@ -498,14 +392,14 @@ with tab_clusters:
                 st.markdown(
                     f"""
                     <div class="risk-card {css_class}">
-                        <div style="font-size:2rem; margin-bottom:0.5rem;">{emoji}</div>
-                        <div style="font-size:1.3rem; font-weight: 700;">{riesgo}</div>
-                        <div style="font-size:0.9rem; margin-top:1rem; line-height: 1.6;">
-                            👥 {int(fila['cantidad_clientes'])} clientes<br>
-                            🎂 {fila['edad_promedio']:.1f} años prom.<br>
-                            ⚖️ BMI {fila['bmi_promedio']:.1f}<br>
-                            💵 ${fila['cargos_promedio']:,.0f} prom.<br>
-                            🚬 {fila['porcentaje_fumadores']:.1f}% fumadores
+                        <div style="font-size:2rem;">{emoji}</div>
+                        <div style="font-size:1.3rem; font-weight:700; margin-top:0.5rem;">{riesgo}</div>
+                        <div style="font-size:0.85rem; margin-top:0.8rem; line-height:1.6;">
+                            {int(fila['cantidad_clientes'])} clientes<br>
+                            Edad prom: {fila['edad_promedio']:.1f}<br>
+                            BMI prom: {fila['bmi_promedio']:.1f}<br>
+                            Cargos prom: ${fila['cargos_promedio']:,.0f}<br>
+                            Fumadores: {fila['porcentaje_fumadores']:.1f}%
                         </div>
                     </div>
                     """,
@@ -514,65 +408,52 @@ with tab_clusters:
 
         st.markdown("---")
         
-        # Gráficos mejorados
-        graf_col1, graf_col2 = st.columns(2)
+        col_g1, col_g2 = st.columns(2)
         
-        with graf_col1:
+        with col_g1:
             st.markdown("#### 💰 Distribución de Cargos Médicos")
             fig, ax = plt.subplots(figsize=(8, 5))
             fig.patch.set_facecolor('#f8f9fa')
             ax.set_facecolor('#f8f9fa')
-            
             sns.boxplot(
                 data=df_clusters, x="riesgo_actuarial", y="charges",
-                order=orden, hue="riesgo_actuarial", palette=["#11998e", "#f2994a", "#eb3349"], 
+                order=orden, hue="riesgo_actuarial", 
+                palette=["#0b8a5e", "#f0a500", "#e74c3c"], 
                 ax=ax, legend=False, linewidth=2
             )
-            ax.set_xlabel("Nivel de Riesgo Actuarial", fontweight='bold')
+            ax.set_xlabel("Riesgo Actuarial", fontweight='bold')
             ax.set_ylabel("Cargos Médicos ($)", fontweight='bold')
             ax.grid(True, alpha=0.3, linestyle='--')
             st.pyplot(fig, use_container_width=True)
 
-        with graf_col2:
-            st.markdown("#### 🚬 Impacto del Tabaquismo")
+        with col_g2:
+            st.markdown("#### 🚬 Fumadores por Nivel de Riesgo")
             fig2, ax2 = plt.subplots(figsize=(8, 5))
             fig2.patch.set_facecolor('#f8f9fa')
             ax2.set_facecolor('#f8f9fa')
-            
             sns.countplot(
                 data=df_clusters, x="riesgo_actuarial", hue="smoker",
-                order=orden, palette=["#74b9ff", "#ff7675"], ax=ax2
+                order=orden, palette=["#5dade2", "#ec7063"], ax=ax2
             )
-            ax2.set_xlabel("Nivel de Riesgo Actuarial", fontweight='bold')
+            ax2.set_xlabel("Riesgo Actuarial", fontweight='bold')
             ax2.set_ylabel("Cantidad de Clientes", fontweight='bold')
             ax2.legend(title="Fumador", labels=["No", "Sí"])
             ax2.grid(True, alpha=0.3, linestyle='--', axis='y')
             st.pyplot(fig2, use_container_width=True)
 
-# --- Tab 3: Comparación de kernels SVM ---------------------------------------
+# --- Tab 3: Comparación SVM ---------------------------------------
 with tab_svm:
-    st.markdown("### 🧩 Rendimiento de Modelos SVM")
-    st.caption("Comparativa de kernels entrenados sobre componentes principales (PCA)")
-
     if df_svm is None:
-        st.warning(
-            "📁 No se encontró `outputs/svm_resultados_kernels.csv`. "
-            "Copie ese archivo generado por el notebook para ver esta sección."
-        )
+        st.warning("📁 No se encontró el archivo de resultados SVM. Verifique la carpeta `outputs/`.")
     else:
-        # Métricas destacadas
         best_model = df_svm.loc[df_svm['accuracy'].idxmax()]
         
-        metric_col1, metric_col2, metric_col3 = st.columns(3)
-        with metric_col1:
-            st.metric("🏆 Mejor Kernel", best_model['kernel'].upper())
-        with metric_col2:
-            st.metric("📈 Mejor Accuracy", f"{best_model['accuracy']:.3f}")
-        with metric_col3:
-            st.metric("🎯 Mejor Precisión", f"{best_model['precision_macro']:.3f}")
+        c1, c2, c3 = st.columns(3)
+        c1.metric("🏆 Mejor Kernel", best_model['kernel'].upper())
+        c2.metric("📈 Accuracy", f"{best_model['accuracy']:.3f}")
+        c3.metric("🎯 Precisión Macro", f"{best_model['precision_macro']:.3f}")
         
         st.markdown("---")
-        st.markdown("#### 📊 Resultados por Kernel")
         
         st.dataframe(
             df_svm.style.background_gradient(cmap="RdYlGn", subset=["accuracy", "precision_macro"])
@@ -580,8 +461,7 @@ with tab_svm:
             use_container_width=True, hide_index=True,
         )
 
-        # Gráfico comparativo mejorado
-        st.markdown("#### 📈 Comparativa Visual de Kernels")
+        st.markdown("#### 📈 Comparativa de Kernels")
         fig3, ax3 = plt.subplots(figsize=(10, 5))
         fig3.patch.set_facecolor('#f8f9fa')
         ax3.set_facecolor('#f8f9fa')
@@ -590,14 +470,13 @@ with tab_svm:
                                var_name="Métrica", value_name="Valor")
         
         bars = sns.barplot(data=df_melt, x="kernel", y="Valor", hue="Métrica", 
-                          palette=["#667eea", "#764ba2"], ax=ax3)
+                          palette=["#2a5298", "#3a7bd5"], ax=ax3)
         ax3.set_ylim(0, 1)
-        ax3.set_ylabel("Valor de Métrica", fontweight='bold')
-        ax3.set_xlabel("Kernel SVM", fontweight='bold')
-        ax3.legend(title="Métrica de Evaluación")
+        ax3.set_ylabel("Valor", fontweight='bold')
+        ax3.set_xlabel("Kernel", fontweight='bold')
+        ax3.legend(title="Métrica")
         ax3.grid(True, alpha=0.3, linestyle='--', axis='y')
         
-        # Agregar valores en las barras
         for p in ax3.patches:
             ax3.annotate(f'{p.get_height():.3f}', 
                         (p.get_x() + p.get_width() / 2., p.get_height()),
@@ -606,59 +485,36 @@ with tab_svm:
         st.pyplot(fig3, use_container_width=True)
 
         st.info(
-            "💡 **Nota técnica:** Estos modelos SVM fueron entrenados sobre 2 componentes principales (PCA) "
-            "únicamente con fines de visualización de fronteras de decisión. "
-            "La predicción de riesgo para clientes nuevos utiliza el pipeline de K-means."
+            "💡 Los modelos SVM se entrenaron sobre 2 componentes PCA para visualización. "
+            "La predicción de riesgo usa el pipeline de K-means."
         )
 
     if svm_models is not None:
-        st.success(f"✅ Kernels disponibles: {', '.join([k.upper() for k in svm_models.keys()])}")
+        st.success(f"✅ Kernels cargados: {', '.join([k.upper() for k in svm_models.keys()])}")
 
-# --- Tab 4: Datos crudos ------------------------------------------------------
+# --- Tab 4: Datos --------------------------------------
 with tab_datos:
-    st.markdown("### 📁 Dataset Completo con Clusters")
-    
     if df_clusters is None:
-        st.warning("📁 No se encontró `outputs/insurance_con_clusters.csv`.")
+        st.warning("📁 No se encontró el archivo de datos.")
     else:
-        # Estadísticas rápidas
-        stat_col1, stat_col2, stat_col3 = st.columns(3)
-        with stat_col1:
-            st.metric("📊 Registros Totales", f"{len(df_clusters):,}")
-        with stat_col2:
-            st.metric("📋 Columnas", len(df_clusters.columns))
-        with stat_col3:
-            st.metric("💾 Tamaño Estimado", f"{df_clusters.memory_usage(deep=True).sum() / 1024:.1f} KB")
-        
+        st.metric("📊 Registros Totales", f"{len(df_clusters):,}")
         st.markdown("---")
         st.dataframe(df_clusters, use_container_width=True, hide_index=True)
         
-        col_down1, col_down2 = st.columns([1, 3])
-        with col_down1:
-            st.download_button(
-                "⬇️ Descargar CSV Completo",
-                data=df_clusters.to_csv(index=False).encode("utf-8"),
-                file_name="insurance_con_clusters.csv",
-                mime="text/csv",
-                use_container_width=True
-            )
-        with col_down2:
-            st.caption("📥 Descargue el dataset completo con las asignaciones de clusters para análisis externos.")
+        st.download_button(
+            "⬇️ Descargar CSV",
+            data=df_clusters.to_csv(index=False).encode("utf-8"),
+            file_name="insurance_con_clusters.csv",
+            mime="text/csv",
+        )
 
-# Footer mejorado
+# Footer
 st.markdown("---")
 st.markdown(
     """
     <div class="footer">
-        <div style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">
-            🤖 IS-701 Inteligencia Artificial
-        </div>
-        <div style="font-size: 0.9rem; opacity: 0.9;">
-            Universidad Nacional Autónoma de Honduras · Campus Comayagua
-        </div>
-        <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 0.5rem;">
-            Desarrollado con Streamlit · Modelos: K-means & SVM · © 2024
-        </div>
+        <strong>IS-701 Inteligencia Artificial</strong> · UNAH Campus Comayagua<br>
+        <span style="opacity:0.7;">Jorge Abraham Fajardo López · 20231900189</span>
     </div>
     """,
     unsafe_allow_html=True,
