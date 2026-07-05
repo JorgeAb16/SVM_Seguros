@@ -20,11 +20,35 @@ st.markdown("---")
 @st.cache_resource
 def load_models():
     try:
-        kmeans_model = joblib.load(Path("models/kmeans_riesgo_actuarial.pkl"))
-        svm_model = joblib.load(Path("models/svm_riesgo_actuarial.pkl"))
+        # Cargamos los archivos usando los nombres limpios (sin el (1))
+        kmeans_loaded = joblib.load(Path("models/kmeans_riesgo_actuarial.pkl"))
+        svm_loaded = joblib.load(Path("models/svm_riesgo_actuarial.pkl"))
+        
+        # --- DESEMPAQUETAR K-MEANS ---
+        if isinstance(kmeans_loaded, dict):
+            # Intentamos buscar nombres de llaves comunes o tomamos el primer objeto del dict
+            kmeans_model = (kmeans_loaded.get('model') or 
+                            kmeans_loaded.get('pipeline') or 
+                            kmeans_loaded.get('kmeans') or 
+                            list(kmeans_loaded.values())[0])
+        else:
+            kmeans_model = kmeans_loaded
+
+        # --- DESEMPAQUETAR SVM ---
+        if isinstance(svm_loaded, dict):
+            # Intentamos buscar nombres de llaves comunes o tomamos el primer objeto del dict
+            svm_model = (svm_loaded.get('model') or 
+                         svm_loaded.get('pipeline') or 
+                         svm_loaded.get('svm') or 
+                         svm_loaded.get('svc') or 
+                         list(svm_loaded.values())[0])
+        else:
+            svm_model = svm_loaded
+            
         return kmeans_model, svm_model
     except Exception as e:
-        st.error(f"Error al cargar los modelos: {e}")
+        st.error(f"❌ Error al cargar los modelos: {e}")
+        st.info("Verifica que los archivos estén en la carpeta 'models/' con los nombres 'kmeans_riesgo_actuarial.pkl' y 'svm_riesgo_actuarial.pkl'")
         return None, None
 
 kmeans, svm = load_models()
