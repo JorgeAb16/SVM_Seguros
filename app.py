@@ -1,118 +1,84 @@
-import streamlit as st
-import pandas as pd
-import numpy as np
+# ==========================================
+# app.py - Ejecución y Predicción Actuarial
+# ==========================================
+import os
 import joblib
-from pathlib import Path
+import pandas as pd
+import warnings
 
-# Configuración de la página
-st.set_page_config(
-    page_title="Evaluación de Riesgo Actuarial",
-    page_icon="🛡️",
-    layout="centered"
-)
+warnings.filterwarnings('ignore')
 
-# Título de la app
-st.title("🛡️ Sistema de Evaluación de Riesgo Actuarial")
-st.markdown("Clasificación de riesgo mediante K-Means y Máquinas de Vectores de Soporte (SVM).")
-st.markdown("---")
-
-# Función para cargar los modelos de forma segura
-@st.cache_resource
-def load_models():
-    try:
-        # Cargamos los archivos usando los nombres limpios (sin el (1))
-        kmeans_loaded = joblib.load(Path("models/kmeans_riesgo_actuarial.pkl"))
-        svm_loaded = joblib.load(Path("models/svm_riesgo_actuarial.pkl"))
-        
-        # --- DESEMPAQUETAR K-MEANS ---
-        if isinstance(kmeans_loaded, dict):
-            # Intentamos buscar nombres de llaves comunes o tomamos el primer objeto del dict
-            kmeans_model = (kmeans_loaded.get('model') or 
-                            kmeans_loaded.get('pipeline') or 
-                            kmeans_loaded.get('kmeans') or 
-                            list(kmeans_loaded.values())[0])
-        else:
-            kmeans_model = kmeans_loaded
-
-        # --- DESEMPAQUETAR SVM ---
-        if isinstance(svm_loaded, dict):
-            # Intentamos buscar nombres de llaves comunes o tomamos el primer objeto del dict
-            svm_model = (svm_loaded.get('model') or 
-                         svm_loaded.get('pipeline') or 
-                         svm_loaded.get('svm') or 
-                         svm_loaded.get('svc') or 
-                         list(svm_loaded.values())[0])
-        else:
-            svm_model = svm_loaded
-            
-        return kmeans_model, svm_model
-    except Exception as e:
-        st.error(f"❌ Error al cargar los modelos: {e}")
-        st.info("Verifica que los archivos estén en la carpeta 'models/' con los nombres 'kmeans_riesgo_actuarial.pkl' y 'svm_riesgo_actuarial.pkl'")
-        return None, None
-
-kmeans, svm = load_models()
-
-if kmeans and svm:
-    # --- INTERFAZ DE USUARIO / FORMULARIO ---
-    st.sidebar.header("📋 Datos del Asegurado")
+def cargar_modelos():
+    """Carga los modelos entrenados previamente desde la carpeta models."""
+    ruta_svm = 'models/svm_riesgo_actuarial.pkl'
     
-    age = st.sidebar.slider("Edad (age)", min_value=18, max_value=100, value=35)
-    sex = st.sidebar.selectbox("Sexo (sex)", options=["male", "female"])
-    bmi = st.sidebar.number_input("Índice de Masa Corporal (bmi)", min_value=10.0, max_value=60.0, value=25.0, step=0.1)
-    children = st.sidebar.slider("Hijos / Dependientes (children)", min_value=0, max_value=5, value=0)
-    smoker = st.sidebar.selectbox("¿Fuma? (smoker)", options=["yes", "no"])
-    region = st.sidebar.selectbox("Región (region)", options=["southwest", "southeast", "northwest", "northeast"])
-    charges = st.sidebar.number_input("Cargos Médicos Estimados (charges)", min_value=1000.0, max_value=70000.0, value=13000.0, step=500.0)
+    if not os.path.exists(ruta_svm):
+        raise FileNotFoundError(
+            f"No se encontró el modelo entrenado en '{ruta_svm}'. "
+            "Asegúrate de ejecutar primero el script de entrenamiento para generar los archivos .pkl."
+        )
+    
+    # Cargamos el pipeline de SVM que ya incluye el preprocesamiento (ColumnTransformer)
+    modelo_svm = joblib.load(ruta_svm)
+    return modelo_svm
 
-    # Crear el DataFrame con la misma estructura que el 'insurance.csv' original
-    input_data = pd.DataFrame([{
-        'age': age,
-        'sex': sex.lower().strip(),
-        'bmi': bmi,
-        'children': children,
-        'smoker': smoker.lower().strip(),
-        'region': region.lower().strip(),
-        'charges': charges
-    }])
+def predecir_riesgo_cliente(datos_cliente, modelo):
+    """
+    Recibe un diccionario con los datos del cliente, los convierte a DataFrame
+    y utiliza el pipeline cargado para predecir el nivel de riesgo.
+    """
+    # Mapeo inverso de las etiquetas numéricas a texto descriptivo
+    mapeo_riesgo = {
+        0: "Bajo Riesgo (Cargos Médicos Mínimos)",
+        1: "Riesgo Medio (Cargos Médicos Moderados)",
+        2: "Alto Riesgo (Cargos Médicos Elevados / Crónicos)"
+    }
+    
+    # Convertir el diccionario de entrada en un DataFrame de una sola fila
+    df_cliente = pd.DataFrame([datos_cliente])
+    
+    # Asegurar el formato string y minúsculas para las variables categóricas
+    for col in ['sex', 'smoker', 'region']:
+        df_cliente[col] = df_cliente[col].astype(str).str.strip().str.lower()
+    
+    # El pipeline de SVM aplica automáticamente el StandardScaler y OneHotEncoder antes de clasificar
+    prediccion_numerica = modelo.predict(df_cliente)[0]
+    
+    return mapeo_riesgo[prediccion_numerica]
 
-    # Mostrar los datos ingresados en la pantalla principal
-    st.subheader("Datos Ingresados para el Análisis")
-    st.dataframe(input_data)
-
-    # --- PREDICCIÓN ---
-    if st.button("📊 Evaluar Riesgo Actuarial"):
-        with st.spinner("Procesando datos y calculando riesgo..."):
-            try:
-                # 1. Predicción de Segmentación (K-Means)
-                # Nota: Si tu modelo requiere que los datos estén preprocesados (OneHotEncoder/Scaler), 
-                # asegúrate de que tu archivo .pkl sea el Pipeline completo.
-                cluster_pred = kmeans.predict(input_data)[0]
-                
-                # 2. Predicción de Clasificación de Riesgo (SVM)
-                # Si el SVM depende del resultado del cluster, puedes agregarlo aquí:
-                # input_data['cluster'] = cluster_pred
-                risk_pred = svm.predict(input_data)[0]
-                
-                # --- MOSTRAR RESULTADOS ---
-                st.markdown("---")
-                st.subheader("🚀 Resultados del Modelo")
-                
-                col1, col2 = st.columns(2)
-                
-                with col1:
-                    st.metric(label="Segmento de Cliente (Clúster)", value=f"Grupo {cluster_pred}")
-                    st.info(f"El cliente pertenece al perfil de comportamiento del Grupo {cluster_pred}.")
-
-                with col2:
-                    # Formatear el color dependiendo de la salida de tu SVM (ej. si es Riesgo Alto/Bajo o 0/1)
-                    st.metric(label="Nivel de Riesgo Actuarial", value=f"{risk_pred}")
-                    if str(risk_pred).lower() in ['high', 'alto', '1']:
-                        st.error("⚠️ Alerta: Este perfil presenta un Riesgo Actuarial Elevado.")
-                    else:
-                        st.success("✅ Perfil Seguro: Riesgo Actuarial Bajo / Moderado.")
-                        
-            except Exception as e:
-                st.error(f"Ocurrió un error al realizar la predicción. Verifica que el archivo .pkl incluya el preprocesamiento (Pipeline): {e}")
-else:
-    st.warning("⚠️ Esperando que los modelos se carguen correctamente...")
+# ==========================================
+# Ejemplo de Uso del Script en Producción
+# ==========================================
+if __name__ == "__main__":
+    print("--- Inicializando Sistema de Evaluación de Riesgo Actuarial ---")
+    
+    try:
+        # 1. Cargar el modelo guardado
+        pipeline_produccion = cargar_modelos()
+        print("Modelos cargados exitosamente de la carpeta 'models/'.\n")
+        
+        # 2. Definir un caso de prueba para evaluación (Simulando una petición entrante)
+        # Puedes cambiar estos valores para probar diferentes perfiles de clientes
+        nuevo_cliente = {
+            'age': 45,
+            'sex': 'female',
+            'bmi': 32.5,
+            'children': 2,
+            'smoker': 'yes',      # Cambia a 'no' para ver cómo se reduce el riesgo
+            'region': 'southeast',
+            'charges': 41000.0    # El estimador financiero o cargo base estimado
+        }
+        
+        print("Datos del cliente a evaluar:")
+        for clave, valor in nuevo_cliente.items():
+            print(f"  - {clave.capitalize()}: {valor}")
+            
+        # 3. Ejecutar la predicción
+        resultado = predecir_riesgo_cliente(nuevo_cliente, pipeline_produccion)
+        
+        print("\n==============================================")
+        print(f"RESULTADO DEL ANÁLISIS: {resultado}")
+        print("==============================================")
+        
+    except Exception as e:
+        print(f"\n[ERROR] Ocurrió un problema durante la ejecución: {e}")
