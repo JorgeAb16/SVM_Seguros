@@ -231,7 +231,7 @@ st.markdown(
     """
     <div class="app-header">
         <h1>🛡️ Plataforma de Riesgo Actuarial</h1>
-        <p>Análisis con K-means & SVM · IS-701 Inteligencia Artificial · UNAH Campus Comayagua</p>
+        <p>Análisis con K-means & SVM · IS-701 Inteligencia Artificial · Jorge Abraham Fajardo López · 20231900189</p>
     </div>
     """,
     unsafe_allow_html=True,
