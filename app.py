@@ -111,7 +111,7 @@ st.markdown(
         background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
     }
     
-    /* Sidebar - Solo afecta a la sidebar */
+    /* Sidebar */
     section[data-testid="stSidebar"] {
         background: linear-gradient(180deg, #1a2332 0%, #1e2d42 50%, #243447 100%);
         border-right: 1px solid rgba(255, 255, 255, 0.08);
@@ -169,28 +169,29 @@ st.markdown(
         background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
     }
     
-    /* CORRECCIÓN: Métricas con fondo blanco y texto oscuro */
-    div[data-testid="stMetric"] {
-        background-color: white;
-        padding: 1rem;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        border: 1px solid #e1e5eb;
+    /* CORRECCIÓN DEFINITIVA: Métricas con fondo FIJO y texto FIJO */
+    [data-testid="stMetric"] {
+        background-color: #2c3e50 !important;
+        padding: 1.2rem !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+        border: 1px solid #34495e !important;
     }
     
-    div[data-testid="stMetric"] label {
-        color: #5a6c7d !important;
+    [data-testid="stMetric"] label {
+        color: #bdc3c7 !important;
         font-weight: 500 !important;
+        font-size: 0.85rem !important;
     }
     
-    div[data-testid="stMetricValue"] {
-        color: #1e3c72 !important;
+    [data-testid="stMetricValue"] {
+        color: #ecf0f1 !important;
         font-weight: 700 !important;
         font-size: 1.8rem !important;
     }
     
-    div[data-testid="stMetricDelta"] {
-        color: #5a6c7d !important;
+    [data-testid="stMetricDelta"] {
+        color: #bdc3c7 !important;
     }
     
     /* DataFrames */
@@ -198,22 +199,6 @@ st.markdown(
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    }
-    
-    /* Asegurar que todo el contenido principal tenga texto oscuro */
-    .main .stMarkdown,
-    .main p,
-    .main span,
-    .main div {
-        color: #2c3e50;
-    }
-    
-    /* Pero mantener blanco en elementos específicos */
-    .app-header,
-    .app-header *,
-    .risk-card,
-    .risk-card * {
-        color: white !important;
     }
     
     /* Info, warning, error boxes */
@@ -393,7 +378,9 @@ with tab_eval:
                 st.markdown("**Datos del cliente evaluado:**")
                 st.dataframe(cliente, use_container_width=True, hide_index=True)
                 
-                # Métricas con fondo blanco y texto oscuro
+                st.markdown("---")
+                
+                # Métricas con fondo oscuro fijo y texto claro
                 col_a, col_b, col_c = st.columns(3)
                 with col_a:
                     st.metric("🎂 Edad", f"{age} años")
@@ -420,7 +407,7 @@ with tab_clusters:
         orden = [r for r in ["Bajo", "Medio", "Alto"] if r in resumen.index]
         resumen = resumen.reindex(orden)
 
-        # KPIs
+        # KPIs con fondo oscuro fijo
         total = len(df_clusters)
         k1, k2, k3, k4 = st.columns(4)
         with k1:
@@ -474,9 +461,8 @@ with tab_clusters:
                 palette=["#0b8a5e", "#f0a500", "#e74c3c"], 
                 ax=ax, legend=False, linewidth=2
             )
-            ax.set_xlabel("Riesgo Actuarial", fontweight='bold', color='#2c3e50')
-            ax.set_ylabel("Cargos Médicos ($)", fontweight='bold', color='#2c3e50')
-            ax.tick_params(colors='#2c3e50')
+            ax.set_xlabel("Riesgo Actuarial", fontweight='bold')
+            ax.set_ylabel("Cargos Médicos ($)", fontweight='bold')
             ax.grid(True, alpha=0.3, linestyle='--')
             st.pyplot(fig, use_container_width=True)
 
@@ -489,9 +475,8 @@ with tab_clusters:
                 data=df_clusters, x="riesgo_actuarial", hue="smoker",
                 order=orden, palette=["#5dade2", "#ec7063"], ax=ax2
             )
-            ax2.set_xlabel("Riesgo Actuarial", fontweight='bold', color='#2c3e50')
-            ax2.set_ylabel("Cantidad de Clientes", fontweight='bold', color='#2c3e50')
-            ax2.tick_params(colors='#2c3e50')
+            ax2.set_xlabel("Riesgo Actuarial", fontweight='bold')
+            ax2.set_ylabel("Cantidad de Clientes", fontweight='bold')
             ax2.legend(title="Fumador", labels=["No", "Sí"])
             ax2.grid(True, alpha=0.3, linestyle='--', axis='y')
             st.pyplot(fig2, use_container_width=True)
@@ -530,16 +515,15 @@ with tab_svm:
         bars = sns.barplot(data=df_melt, x="kernel", y="Valor", hue="Métrica", 
                           palette=["#2a5298", "#3a7bd5"], ax=ax3)
         ax3.set_ylim(0, 1)
-        ax3.set_ylabel("Valor", fontweight='bold', color='#2c3e50')
-        ax3.set_xlabel("Kernel", fontweight='bold', color='#2c3e50')
-        ax3.tick_params(colors='#2c3e50')
+        ax3.set_ylabel("Valor", fontweight='bold')
+        ax3.set_xlabel("Kernel", fontweight='bold')
         ax3.legend(title="Métrica")
         ax3.grid(True, alpha=0.3, linestyle='--', axis='y')
         
         for p in ax3.patches:
             ax3.annotate(f'{p.get_height():.3f}', 
                         (p.get_x() + p.get_width() / 2., p.get_height()),
-                        ha='center', va='bottom', fontsize=9, fontweight='bold', color='#2c3e50')
+                        ha='center', va='bottom', fontsize=9, fontweight='bold')
         
         st.pyplot(fig3, use_container_width=True)
 
