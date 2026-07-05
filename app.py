@@ -137,39 +137,39 @@ st.markdown(
         box-shadow: 0 10px 28px rgba(42, 82, 152, 0.6) !important;
     }
     
-    /* Estilos para pestañas */
+    /* CORRECCIÓN: Fondo de la barra de pestañas */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 4px;
-        background-color: #f0f2f6;
-        padding: 6px;
-        border-radius: 12px;
+        gap: 8px;
+        background-color: #1e3c72 !important;
+        padding: 8px 12px;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(30, 60, 114, 0.2);
     }
     
     .stTabs [data-baseweb="tab"] {
-        border-radius: 8px;
-        padding: 10px 20px;
+        border-radius: 10px;
+        padding: 12px 24px;
         font-weight: 500;
-        color: #2c3e50;
+        color: rgba(255, 255, 255, 0.8) !important;
         background-color: transparent;
         border: none;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
     }
     
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        background: rgba(255, 255, 255, 0.2) !important;
         color: white !important;
         font-weight: 600;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
     
     .stTabs [data-baseweb="tab"]:hover {
-        background-color: rgba(30, 60, 114, 0.08);
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
     }
     
-    .stTabs [aria-selected="true"]:hover {
-        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    }
-    
-    /* CORRECCIÓN DEFINITIVA: Métricas con fondo FIJO y texto FIJO */
+    /* Métricas con fondo oscuro fijo */
     [data-testid="stMetric"] {
         background-color: #2c3e50 !important;
         padding: 1.2rem !important;
@@ -380,7 +380,6 @@ with tab_eval:
                 
                 st.markdown("---")
                 
-                # Métricas con fondo oscuro fijo y texto claro
                 col_a, col_b, col_c = st.columns(3)
                 with col_a:
                     st.metric("🎂 Edad", f"{age} años")
@@ -407,7 +406,6 @@ with tab_clusters:
         orden = [r for r in ["Bajo", "Medio", "Alto"] if r in resumen.index]
         resumen = resumen.reindex(orden)
 
-        # KPIs con fondo oscuro fijo
         total = len(df_clusters)
         k1, k2, k3, k4 = st.columns(4)
         with k1:
